@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "node_modules",
+    "build",
+    "public",
+    ".git"
+  ],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
