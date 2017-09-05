@@ -13165,7 +13165,7 @@ function disableChecking() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.removeTodo = exports.addTodo = undefined;
+exports.updateTodo = exports.toggleTodo = exports.removeTodo = exports.addTodo = undefined;
 
 var _reduxAct = __webpack_require__(94);
 
@@ -13183,6 +13183,14 @@ var addTodo = exports.addTodo = (0, _reduxAct.createAction)('TODOS/ADD', functio
 });
 var removeTodo = exports.removeTodo = (0, _reduxAct.createAction)('TODOS/REMOVE', function (id) {
     return id;
+});
+var toggleTodo = exports.toggleTodo = (0, _reduxAct.createAction)('TODOS/TOGGLE', function (id) {
+    return id;
+});
+var updateTodo = exports.updateTodo = (0, _reduxAct.createAction)('TODOS/UPDATE', function (_ref) {
+    var id = _ref.id,
+        text = _ref.text;
+    return { id: id, text: text };
 });
 
 /***/ }),
@@ -25772,16 +25780,21 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _redux = __webpack_require__(52);
-
-var _reducer = __webpack_require__(221);
+var _reducer = __webpack_require__(252);
 
 var _reducer2 = _interopRequireDefault(_reducer);
+
+var _redux = __webpack_require__(52);
+
+var _reducer3 = __webpack_require__(221);
+
+var _reducer4 = _interopRequireDefault(_reducer3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
-    todos: _reducer2.default
+    todos: _reducer4.default,
+    filters: _reducer2.default
 });
 exports.default = rootReducer;
 
@@ -26381,7 +26394,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var defaultState = {
-    list: [{ id: '1', text: 'Todo Sample 1' }, { id: '2', text: 'Todo Sample 2' }, { id: '3', text: 'Todo Sample 3' }, { id: '4', text: 'Todo Sample 4' }, { id: '5', text: 'Todo Sample 5' }, { id: '6', text: 'Todo Sample 6' }]
+    list: [{ id: '1', text: 'Buy groceries', completed: false }, { id: '2', text: 'Feed the cat', completed: true }, { id: '3', text: 'Take a nap', completed: false }, { id: '4', text: 'Meditate', completed: true }, { id: '5', text: 'Work', completed: false }]
 };
 var todosReducer = (0, _reduxAct.createReducer)((_createReducer = {}, _defineProperty(_createReducer, _actions.addTodo, function (state, payload) {
     return _extends({}, state, {
@@ -26391,6 +26404,22 @@ var todosReducer = (0, _reduxAct.createReducer)((_createReducer = {}, _definePro
     return _extends({}, state, {
         list: state.list.filter(function (t) {
             return t.id !== payload;
+        })
+    });
+}), _defineProperty(_createReducer, _actions.toggleTodo, function (state, payload) {
+    return _extends({}, state, {
+        list: state.list.map(function (t) {
+            var currentTodo = t;
+            if (currentTodo.id === payload) currentTodo.completed = !currentTodo.completed;
+            return currentTodo;
+        })
+    });
+}), _defineProperty(_createReducer, _actions.updateTodo, function (state, payload) {
+    return _extends({}, state, {
+        list: state.list.map(function (t) {
+            var currentTodo = t;
+            if (currentTodo.id === payload.id) currentTodo.text = payload.text;
+            return currentTodo;
         })
     });
 }), _createReducer), defaultState);
@@ -27538,16 +27567,20 @@ var _component = __webpack_require__(244);
 
 var _component2 = _interopRequireDefault(_component);
 
+var _reducer = __webpack_require__(252);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mapStateToProps = function mapStateToProps(state) {
     return {
-        todos: state.todos.list
+        todos: (0, _reducer.getFilteredTodos)(state)
     };
 };
 var mapDispatchToProps = {
     removeTodo: _actions.removeTodo,
-    addTodo: _actions.addTodo
+    addTodo: _actions.addTodo,
+    toggleTodo: _actions.toggleTodo,
+    updateTodo: _actions.updateTodo
 };
 var Todos = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_component2.default);
 exports.default = Todos;
@@ -27566,11 +27599,15 @@ Object.defineProperty(exports, "__esModule", {
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _templateObject = _taggedTemplateLiteral(['\n  margin: 100px auto 0;\n  diplay: flex;\n  flex-flow: column nowrap;\n  max-width: 450px;\n'], ['\n  margin: 100px auto 0;\n  diplay: flex;\n  flex-flow: column nowrap;\n  max-width: 450px;\n']),
-    _templateObject2 = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: column nowrap;\n  margin-top: 20px;\n'], ['\n  display: flex;\n  flex-flow: column nowrap;\n  margin-top: 20px;\n']);
+    _templateObject2 = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: column nowrap;\n  margin-top: 10px;\n'], ['\n  display: flex;\n  flex-flow: column nowrap;\n  margin-top: 10px;\n']);
 
 var _react = __webpack_require__(12);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Filters = __webpack_require__(254);
+
+var _Filters2 = _interopRequireDefault(_Filters);
 
 var _styledComponents = __webpack_require__(56);
 
@@ -27593,16 +27630,19 @@ var List = _styledComponents2.default.div(_templateObject2);
 var TodosComponent = function TodosComponent(_ref) {
   var todos = _ref.todos,
       addTodo = _ref.addTodo,
-      removeTodo = _ref.removeTodo;
+      removeTodo = _ref.removeTodo,
+      toggleTodo = _ref.toggleTodo,
+      updateTodo = _ref.updateTodo;
   return _react2.default.createElement(
     Container,
     null,
     _react2.default.createElement(_NewTodo2.default, { addTodo: addTodo }),
+    _react2.default.createElement(_Filters2.default, null),
     _react2.default.createElement(
       List,
       null,
       todos && Array.isArray(todos) && todos.length > 0 && todos.map(function (t) {
-        return _react2.default.createElement(_Todo2.default, _extends({ key: t.id }, t, { removeTodo: removeTodo.bind(null, t.id) }));
+        return _react2.default.createElement(_Todo2.default, _extends({ key: t.id }, t, { removeTodo: removeTodo.bind(null, t.id), toggleTodo: toggleTodo.bind(null, t.id), updateTodo: updateTodo }));
       })
     )
   );
@@ -29357,9 +29397,221 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _templateObject = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n  padding: 5px 10px;\n  border-bottom: 1px solid rgba(0,0,0,0.15);\n'], ['\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n  padding: 5px 10px;\n  border-bottom: 1px solid rgba(0,0,0,0.15);\n']),
-    _templateObject2 = _taggedTemplateLiteral(['\n  flex: 1;\n  text-overflow: ellipsis;\n'], ['\n  flex: 1;\n  text-overflow: ellipsis;\n']),
-    _templateObject3 = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  align-items: center;\n  min-height: 15px;\n  min-width: 15px;\n  background: none;\n  border: none;\n  box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.2);\n  font-size: 18px;\n  border-radius: 50%;\n  transition: box-shadow .3s ease;\n  will-change: box-shadow;\n  color: dimgray;\n\n  &:hover {\n    cursor: pointer;\n    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.4);\n  }\n'], ['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  align-items: center;\n  min-height: 15px;\n  min-width: 15px;\n  background: none;\n  border: none;\n  box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.2);\n  font-size: 18px;\n  border-radius: 50%;\n  transition: box-shadow .3s ease;\n  will-change: box-shadow;\n  color: dimgray;\n\n  &:hover {\n    cursor: pointer;\n    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.4);\n  }\n']);
+    _templateObject2 = _taggedTemplateLiteral(['\n  border: 1px solid black;\n  border-radius: 3px;\n  background: none;\n  width: 15px;\n  height: 15px;\n  margin-right: 10px;\n  transition: border .2s ease, background-color .2s ease;\n  outline: none;\n  padding: 0;\n\n  &[data-completed=true] {\n    border: 1px solid rgba(0,0,0,0.4);\n    background-color: rgba(0,0,0,0.05);\n  }\n\n  &:hover {\n    cursor: pointer;\n  }\n'], ['\n  border: 1px solid black;\n  border-radius: 3px;\n  background: none;\n  width: 15px;\n  height: 15px;\n  margin-right: 10px;\n  transition: border .2s ease, background-color .2s ease;\n  outline: none;\n  padding: 0;\n\n  &[data-completed=true] {\n    border: 1px solid rgba(0,0,0,0.4);\n    background-color: rgba(0,0,0,0.05);\n  }\n\n  &:hover {\n    cursor: pointer;\n  }\n']),
+    _templateObject3 = _taggedTemplateLiteral(['\n  width: 12px;\n  height: 12px;\n  fill: rgba(0,0,0,0.3);\n  outline: none;\n'], ['\n  width: 12px;\n  height: 12px;\n  fill: rgba(0,0,0,0.3);\n  outline: none;\n']),
+    _templateObject4 = _taggedTemplateLiteral(['\n  border: none;\n  background: none;\n  flex: 1;\n  text-overflow: ellipsis;\n  color: black;\n  transition: color .2s ease;\n  font-size: 16px;\n  outline: none;\n  border-bottom: 1px solid transparent;\n  margin-top: 1px;\n\n  &[data-completed=true] {\n    color: dimgray;\n    text-decoration: line-through;\n    text-decoration-color: rgba(0,0,0,0.3);\n    font-style: oblique;\n  }\n\n  &:focus {\n    border-bottom: 1px solid rgba(0,0,0,0.4);\n  }\n'], ['\n  border: none;\n  background: none;\n  flex: 1;\n  text-overflow: ellipsis;\n  color: black;\n  transition: color .2s ease;\n  font-size: 16px;\n  outline: none;\n  border-bottom: 1px solid transparent;\n  margin-top: 1px;\n\n  &[data-completed=true] {\n    color: dimgray;\n    text-decoration: line-through;\n    text-decoration-color: rgba(0,0,0,0.3);\n    font-style: oblique;\n  }\n\n  &:focus {\n    border-bottom: 1px solid rgba(0,0,0,0.4);\n  }\n']),
+    _templateObject5 = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  align-items: center;\n  min-height: 15px;\n  min-width: 15px;\n  background: none;\n  border: none;\n  box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.2);\n  font-size: 18px;\n  border-radius: 50%;\n  transition: box-shadow .3s ease;\n  will-change: box-shadow;\n  color: dimgray;\n  margin-left: 10px;\n\n  &:hover {\n    cursor: pointer;\n    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.4);\n  }\n'], ['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  align-items: center;\n  min-height: 15px;\n  min-width: 15px;\n  background: none;\n  border: none;\n  box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.2);\n  font-size: 18px;\n  border-radius: 50%;\n  transition: box-shadow .3s ease;\n  will-change: box-shadow;\n  color: dimgray;\n  margin-left: 10px;\n\n  &:hover {\n    cursor: pointer;\n    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.4);\n  }\n']);
+
+var _react = __webpack_require__(12);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _styledComponents = __webpack_require__(56);
+
+var _styledComponents2 = _interopRequireDefault(_styledComponents);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); } // tslint:disable:max-line-length
+
+
+var TodoContainer = _styledComponents2.default.div(_templateObject);
+var CheckboxButton = _styledComponents2.default.button(_templateObject2);
+var Icon = _styledComponents2.default.svg(_templateObject3);
+var TodoText = _styledComponents2.default.input(_templateObject4);
+var RemoveTodoButton = _styledComponents2.default.button(_templateObject5);
+
+var Todo = function (_Component) {
+  _inherits(Todo, _Component);
+
+  function Todo() {
+    _classCallCheck(this, Todo);
+
+    var _this = _possibleConstructorReturn(this, (Todo.__proto__ || Object.getPrototypeOf(Todo)).apply(this, arguments));
+
+    _this._updateTodo = function (e) {
+      var _this$props = _this.props,
+          id = _this$props.id,
+          updateTodo = _this$props.updateTodo;
+
+      updateTodo({
+        id: id,
+        text: e.target.value
+      });
+    };
+    return _this;
+  }
+
+  _createClass(Todo, [{
+    key: 'render',
+    value: function render() {
+      var props = this.props;
+      return _react2.default.createElement(
+        TodoContainer,
+        null,
+        _react2.default.createElement(
+          CheckboxButton,
+          { onClick: props.toggleTodo, 'data-completed': props.completed },
+          props.completed && _react2.default.createElement(
+            Icon,
+            { viewBox: '0 0 40 40' },
+            _react2.default.createElement(
+              'g',
+              null,
+              _react2.default.createElement('path', { d: 'm37.3 12.6q0 0.9-0.6 1.6l-19.2 19.1q-0.6 0.7-1.5 0.7t-1.6-0.7l-11.1-11.1q-0.6-0.6-0.6-1.5t0.6-1.5l3.1-3q0.6-0.7 1.5-0.7t1.5 0.7l6.6 6.5 14.6-14.6q0.6-0.6 1.5-0.6t1.5 0.6l3.1 3q0.6 0.6 0.6 1.5z' })
+            )
+          )
+        ),
+        _react2.default.createElement(TodoText, { 'data-completed': props.completed, value: props.text, onChange: this._updateTodo, spellCheck: false }),
+        _react2.default.createElement(
+          RemoveTodoButton,
+          { onClick: props.removeTodo },
+          'x'
+        )
+      );
+    }
+  }]);
+
+  return Todo;
+}(_react.Component);
+
+exports.default = Todo;
+
+/***/ }),
+/* 252 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getFilteredTodos = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _reduxAct = __webpack_require__(94);
+
+var _actions = __webpack_require__(253);
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var defaultState = {
+    appliedFilter: 'all'
+};
+var filtersReducer = (0, _reduxAct.createReducer)(_defineProperty({}, _actions.applyFilter, function (state, payload) {
+    return _extends({}, state, {
+        appliedFilter: payload
+    });
+}), defaultState);
+exports.default = filtersReducer;
+var getFilteredTodos = exports.getFilteredTodos = function getFilteredTodos(state) {
+    var filter = state.filters.appliedFilter;
+    var allTodos = state.todos.list;
+    if (filter === 'active') {
+        return allTodos.filter(function (t) {
+            return !t.completed;
+        });
+    } else if (filter === 'completed') {
+        return allTodos.filter(function (t) {
+            return t.completed;
+        });
+    } else {
+        return allTodos;
+    }
+};
+
+/***/ }),
+/* 253 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.applyFilter = undefined;
+
+var _reduxAct = __webpack_require__(94);
+
+var applyFilter = exports.applyFilter = (0, _reduxAct.createAction)('FILTERS/APPLY', function (filterType) {
+  return filterType;
+});
+
+/***/ }),
+/* 254 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _container = __webpack_require__(255);
+
+var _container2 = _interopRequireDefault(_container);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _container2.default;
+
+/***/ }),
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _actions = __webpack_require__(253);
+
+var _reactRedux = __webpack_require__(98);
+
+var _component = __webpack_require__(256);
+
+var _component2 = _interopRequireDefault(_component);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        applied: state.filters.appliedFilter
+    };
+};
+var Filters = (0, _reactRedux.connect)(mapStateToProps, { applyFilter: _actions.applyFilter })(_component2.default);
+exports.default = Filters;
+
+/***/ }),
+/* 256 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _templateObject = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-end;\n  align-items: flex-end;\n  padding: 7px 10px;\n  margin-top: 10px;\n'], ['\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-end;\n  align-items: flex-end;\n  padding: 7px 10px;\n  margin-top: 10px;\n']),
+    _templateObject2 = _taggedTemplateLiteral(['\n  margin-right: 10px;\n'], ['\n  margin-right: 10px;\n']),
+    _templateObject3 = _taggedTemplateLiteral(['\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n'], ['\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n']),
+    _templateObject4 = _taggedTemplateLiteral(['\n  border: none;\n  padding: 5px 9px;\n  font-weight: 700;\n  font-size: 14px;\n  background-color: rgba(0,0,0,0.15);\n  color: dimgray;\n  transition: background-color .2s ease;\n  outline: none;\n\n  &:not(:last-child) {\n    margin-right: 7px;\n  }\n\n  &:hover {\n    cursor: pointer;\n    background-color: rgba(0,0,0,0.35);\n  }\n\n  &[data-applied=true] {\n    background-color: rgba(0,0,0,0.35);\n  }\n'], ['\n  border: none;\n  padding: 5px 9px;\n  font-weight: 700;\n  font-size: 14px;\n  background-color: rgba(0,0,0,0.15);\n  color: dimgray;\n  transition: background-color .2s ease;\n  outline: none;\n\n  &:not(:last-child) {\n    margin-right: 7px;\n  }\n\n  &:hover {\n    cursor: pointer;\n    background-color: rgba(0,0,0,0.35);\n  }\n\n  &[data-applied=true] {\n    background-color: rgba(0,0,0,0.35);\n  }\n']);
 
 var _react = __webpack_require__(12);
 
@@ -29373,26 +29625,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var TodoContainer = _styledComponents2.default.div(_templateObject);
-var TodoText = _styledComponents2.default.span(_templateObject2);
-var RemoveTodoButton = _styledComponents2.default.button(_templateObject3);
-var Todo = function Todo(props) {
+var FiltersContainer = _styledComponents2.default.div(_templateObject);
+var FiltersText = _styledComponents2.default.div(_templateObject2);
+var FiltersRow = _styledComponents2.default.div(_templateObject3);
+var Filter = _styledComponents2.default.button(_templateObject4);
+var FiltersComponent = function FiltersComponent(_ref) {
+  var applied = _ref.applied,
+      applyFilter = _ref.applyFilter;
   return _react2.default.createElement(
-    TodoContainer,
+    FiltersContainer,
     null,
     _react2.default.createElement(
-      TodoText,
+      FiltersText,
       null,
-      props.text
+      'Show me'
     ),
     _react2.default.createElement(
-      RemoveTodoButton,
-      { onClick: props.removeTodo },
-      'x'
+      FiltersRow,
+      null,
+      _react2.default.createElement(
+        Filter,
+        { 'data-applied': applied === 'all', onClick: applyFilter.bind(null, 'all') },
+        'All'
+      ),
+      _react2.default.createElement(
+        Filter,
+        { 'data-applied': applied === 'active', onClick: applyFilter.bind(null, 'active') },
+        'Active'
+      ),
+      _react2.default.createElement(
+        Filter,
+        { 'data-applied': applied === 'completed', onClick: applyFilter.bind(null, 'completed') },
+        'Completed'
+      )
     )
   );
 };
-exports.default = Todo;
+exports.default = FiltersComponent;
 
 /***/ })
 /******/ ]);
