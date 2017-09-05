@@ -9,8 +9,17 @@ export const addTodo = createAction(
   }),
 );
 
-
 export const removeTodo = createAction(
   'TODOS/REMOVE',
   (id: string) => id,
+);
+
+export const toggleTodo = createAction(
+  'TODOS/TOGGLE',
+  (id: string) => id,
+);
+
+export const updateTodo = createAction(
+  'TODOS/UPDATE',
+  ({ id, text }: { id: string; text: string; }) => ({ id, text }),
 );

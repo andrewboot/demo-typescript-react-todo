@@ -1,6 +1,6 @@
 import { Todo } from '../../../types/todos';
 import { createReducer } from 'redux-act';
-import { addTodo, removeTodo } from './actions';
+import { addTodo, removeTodo, toggleTodo, updateTodo } from './actions';
 
 export interface todosState {
   list: Todo[];
@@ -8,12 +8,11 @@ export interface todosState {
 
 const defaultState = {
   list: [
-    { id: '1', text: 'Todo Sample 1' },
-    { id: '2', text: 'Todo Sample 2' },
-    { id: '3', text: 'Todo Sample 3' },
-    { id: '4', text: 'Todo Sample 4' },
-    { id: '5', text: 'Todo Sample 5' },
-    { id: '6', text: 'Todo Sample 6' },
+    { id: '1', text: 'Buy groceries', completed: false },
+    { id: '2', text: 'Feed the cat', completed: true },
+    { id: '3', text: 'Take a nap', completed: false },
+    { id: '4', text: 'Meditate', completed: true },
+    { id: '5', text: 'Work', completed: false },
   ],
 };
 
@@ -26,6 +25,24 @@ const todosReducer = createReducer({
   [removeTodo]: (state, payload) => ({
     ...state,
     list: state.list.filter(t => t.id !== payload),
+  }),
+
+  [toggleTodo]: (state, payload) => ({
+    ...state,
+    list: state.list.map((t) => {
+      const currentTodo = t;
+      if (currentTodo.id === payload) currentTodo.completed = !currentTodo.completed;
+      return currentTodo;
+    }),
+  }),
+
+  [updateTodo]: (state, payload) => ({
+    ...state,
+    list: state.list.map((t) => {
+      const currentTodo = t;
+      if (currentTodo.id === payload.id) currentTodo.text = payload.text;
+      return currentTodo;
+    }),
   }),
 
 }, defaultState);

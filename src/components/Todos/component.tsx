@@ -1,3 +1,4 @@
+import { toggleTodo, updateTodo } from './actions';
 import { Todo as TodoType } from '../../../types/todos';
 import React from 'react';
 import styled from 'styled-components';
@@ -23,19 +24,29 @@ interface Props {
   todos: TodoType[];
   addTodo: () => void;
   removeTodo: () => void;
+  toggleTodo: () => void;
+  updateTodo: () => void;
 }
 
 const TodosComponent = ({
   todos,
   addTodo,
   removeTodo,
+  toggleTodo,
+  updateTodo,
 }: Props) => (
   <Container>
     <NewTodo addTodo={addTodo} />
     <List>
       {
         todos && Array.isArray(todos) && todos.length > 0 && todos.map(t => (
-          <Todo key={t.id} {...t} removeTodo={removeTodo.bind(null, t.id)} />
+          <Todo
+            key={t.id}
+            {...t}
+            removeTodo={removeTodo.bind(null, t.id)}
+            toggleTodo={toggleTodo.bind(null, t.id)}
+            updateTodo={updateTodo}
+          />
         ))
       }
     </List>
