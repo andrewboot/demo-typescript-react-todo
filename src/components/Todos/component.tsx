@@ -1,6 +1,7 @@
 import { toggleTodo, updateTodo } from './actions';
 import { Todo as TodoType } from '../../../types/todos';
 import React from 'react';
+import Filters from '../Filters';
 import styled from 'styled-components';
 
 import NewTodo from './elements/NewTodo';
@@ -16,7 +17,7 @@ const Container = styled.div`
 const List = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 
@@ -37,6 +38,7 @@ const TodosComponent = ({
 }: Props) => (
   <Container>
     <NewTodo addTodo={addTodo} />
+    <Filters />
     <List>
       {
         todos && Array.isArray(todos) && todos.length > 0 && todos.map(t => (
