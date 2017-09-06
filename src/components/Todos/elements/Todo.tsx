@@ -90,7 +90,7 @@ type Props = TodoType & {
   key?: string;
   removeTodo?: () => void;
   toggleTodo?: () => void;
-  updateTodo?: (any) => void;
+  updateTodo?: (info: { id: string, text: string }) => void;
 };
 
 class Todo extends Component<Props> {

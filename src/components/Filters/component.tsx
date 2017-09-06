@@ -47,7 +47,7 @@ const Filter = styled.button`
 
 interface Props {
   applied: FilterType;
-  applyFilter: (any) => void;
+  applyFilter: (filterType: FilterType) => void;
 }
 
 const FiltersComponent = ({

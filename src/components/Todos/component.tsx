@@ -23,10 +23,10 @@ const List = styled.div`
 
 interface Props {
   todos: TodoType[];
-  addTodo: () => void;
-  removeTodo: () => void;
-  toggleTodo: () => void;
-  updateTodo: () => void;
+  addTodo: (text: string) => void;
+  removeTodo: (id: string) => void;
+  toggleTodo: (id: string) => void;
+  updateTodo: (info: { id: string; text: string }) => void;
 }
 
 const TodosComponent = ({

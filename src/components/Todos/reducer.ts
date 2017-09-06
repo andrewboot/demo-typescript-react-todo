@@ -6,14 +6,17 @@ export interface todosState {
   list: Todo[];
 }
 
+const developmentTodos = [
+  { id: '1', text: 'Buy groceries', completed: false },
+  { id: '2', text: 'Feed the cat', completed: true },
+  { id: '3', text: 'Take a nap', completed: false },
+  { id: '4', text: 'Meditate', completed: true },
+  { id: '5', text: 'Work', completed: false },
+];
+const defaultTodos = process.env.NODE_ENV === 'development' ? developmentTodos : [];
+
 const defaultState = {
-  list: [
-    { id: '1', text: 'Buy groceries', completed: false },
-    { id: '2', text: 'Feed the cat', completed: true },
-    { id: '3', text: 'Take a nap', completed: false },
-    { id: '4', text: 'Meditate', completed: true },
-    { id: '5', text: 'Work', completed: false },
-  ],
+  list: defaultTodos,
 };
 
 const todosReducer = createReducer({
