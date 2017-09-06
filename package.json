@@ -1,5 +1,10 @@
 {
   "name": "typescript-todo",
+  "author": {
+    "name": "Andrey But",
+    "email": "webdevelop.abut@gmail.com"
+  },
+  "license": "MIT",
   "version": "0.1.0",
   "description": "Yet another todo. Typescript, React, Redux",
   "scripts": {
