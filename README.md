@@ -23,7 +23,7 @@ Run webpack in development mode
 
 ```npm start```
 
-Open `public/index.html` in browser, than change something and refresh browser.
+Open `public/index.html` in a browser, then change something and refresh browser.
 
 ___
 #### Why didn't you add React Hot Loader so I wouldn't need to refresh browser on every change?
